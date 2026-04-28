@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+void largestString(char s[], int k) {
+    char stack[1000];
+    int top = -1;
+
+    int n = strlen(s);
+
+    for (int i = 0; i < n; i++) {
+
+        while (top >= 0 && k > 0 && stack[top] < s[i]) {
+            top--;  // remove smaller char
+            k--;
+        }
+
+        stack[++top] = s[i];
+    }
+
+    // If k still remains, remove from end
+    while (k > 0 && top >= 0) {
+        top--;
+        k--;
+    }
+
+    // Print result
+    for (int i = 0; i <= top; i++) {
+        printf("%c", stack[i]);
+    }
+}
+
+int main() {
+    char s[] = "ritz";
+    int k = 2;
+
+    largestString(s, k); // Output: tz
+
+    return 0;
+}
