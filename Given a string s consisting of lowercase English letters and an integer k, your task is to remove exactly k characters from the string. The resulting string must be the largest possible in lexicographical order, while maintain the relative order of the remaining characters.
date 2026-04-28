@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+void largestString(char s[], int k) {
+    int n = strlen(s);
+    char res[1000];
+    int top = -1;
+
+    for (int i = 0; i < n; i++) {
+
+        // Remove smaller characters if possible
+        while (top >= 0 && k > 0 && res[top] < s[i]) {
+            top--;
+            k--;
+        }
+
+        res[++top] = s[i];
+    }
+
+    // If deletions still left, remove from end
+    while (k > 0) {
+        top--;
+        k--;
+    }
+
+    // Print result
+    for (int i = 0; i <= top; i++) {
+        printf("%c", res[i]);
+    }
+}
+
+int main() {
+    char s[] = "zebra";
+    int k = 3;
+
+    largestString(s, k); // Output: zr
+
+    return 0;
+}
