@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+bool find132pattern(int arr[], int n) {
+    int stack[1000];
+    int top = -1;
+
+    int second = -1000000000; // acts as arr[k]
+
+    for (int i = n - 1; i >= 0; i--) {
+
+        // Step 1: Check condition
+        if (arr[i] < second)
+            return true;
+
+        // Step 2: Update 'second'
+        while (top >= 0 && arr[i] > stack[top]) {
+            second = stack[top];
+            top--;
+        }
+
+        // Step 3: Push current
+        stack[++top] = arr[i];
+    }
+
+    return false;
+}
+
+int main() {
+    int arr[] = {4, 7, 11, 5, 13, 2};
+    int n = 6;
+
+    if (find132pattern(arr, n))
+        printf("true\n");
+    else
+        printf("false\n");
+
+    return 0;
+}
