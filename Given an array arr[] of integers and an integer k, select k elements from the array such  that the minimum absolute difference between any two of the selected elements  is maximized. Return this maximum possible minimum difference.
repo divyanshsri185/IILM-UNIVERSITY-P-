@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int n;
+int totalSum = 0;
+int minDiff = 1000000;
+
+int best[100];
+int curr[100];
+
+void solve(int arr[], int idx, int count, int currSum) {
+
+    // If subset size reached
+    if (idx == n) return;
+
+    if ((n % 2 == 0 && count == n / 2) || 
+        (n % 2 == 1 && count == n / 2)) {
+
+        int diff = abs(totalSum - 2 * currSum);
+
+        if (diff < minDiff) {
+            minDiff = diff;
+            for (int i = 0; i < n; i++)
+                best[i] = curr[i];
+        }
+        return;
+    }
+
+    // Include current element
+    curr[idx] = 1;
+    solve(arr, idx + 1, count + 1, currSum + arr[idx]);
+
+    // Exclude current element
+    curr[idx] = 0;
+    solve(arr, idx + 1, count, currSum);
+}
+
+int main() {
+    int arr[] = {1, 2, 3, 4};
+    n = 4;
+
+    for (int i = 0; i < n; i++)
+        totalSum += arr[i];
+
+    solve(arr, 0, 0, 0);
+
+    printf("Subset 1: ");
+    int sum1 = 0, sum2 = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (best[i]) {
+            printf("%d ", arr[i]);
+            sum1 += arr[i];
+        }
+    }
+
+    printf("\nSubset 2: ");
+    for (int i = 0; i < n; i++) {
+        if (!best[i]) {
+            printf("%d ", arr[i]);
+            sum2 += arr[i];
+        }
+    }
+
+    printf("\nSum1 = %d, Sum2 = %d\n", sum1, sum2);
+
+    return 0;
+}
