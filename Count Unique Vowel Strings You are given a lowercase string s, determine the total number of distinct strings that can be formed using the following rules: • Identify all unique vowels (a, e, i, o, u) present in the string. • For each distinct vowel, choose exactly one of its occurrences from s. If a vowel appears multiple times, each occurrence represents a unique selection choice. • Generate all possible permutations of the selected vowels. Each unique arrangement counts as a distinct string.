@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+int factorial(int n) {
+    int res = 1;
+    for (int i = 1; i <= n; i++)
+        res *= i;
+    return res;
+}
+
+int countVowelStrings(char s[]) {
+    int freq[26] = {0};
+
+    // Count frequencies
+    for (int i = 0; i < strlen(s); i++) {
+        freq[s[i] - 'a']++;
+    }
+
+    char vowels[] = {'a','e','i','o','u'};
+    int k = 0;
+    int product = 1;
+
+    for (int i = 0; i < 5; i++) {
+        if (freq[vowels[i] - 'a'] > 0) {
+            k++;
+            product *= freq[vowels[i] - 'a'];
+        }
+    }
+
+    return product * factorial(k);
+}
+
+int main() {
+    char s[] = "aacidf";
+
+    printf("%d\n", countVowelStrings(s)); // Output: 4
+
+    return 0;
+}
