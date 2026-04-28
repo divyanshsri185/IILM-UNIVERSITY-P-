@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+typedef struct {
+    char name[50];
+    int count;
+} Candidate;
+
+int main() {
+    char arr[][50] = {
+        "john", "johnny", "jackie", "johnny", "john",
+        "jackie", "jamie", "jamie", "john", "johnny",
+        "jamie", "johnny", "john"
+    };
+
+    int n = 13;
+
+    Candidate list[MAX];
+    int size = 0;
+
+    // Step 1: Count votes
+    for (int i = 0; i < n; i++) {
+        int found = 0;
+
+        for (int j = 0; j < size; j++) {
+            if (strcmp(list[j].name, arr[i]) == 0) {
+                list[j].count++;
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            strcpy(list[size].name, arr[i]);
+            list[size].count = 1;
+            size++;
+        }
+    }
+
+    // Step 2: Find winner
+    char winner[50];
+    int maxVotes = 0;
+
+    for (int i = 0; i < size; i++) {
+        if (list[i].count > maxVotes) {
+            maxVotes = list[i].count;
+            strcpy(winner, list[i].name);
+        }
+        else if (list[i].count == maxVotes) {
+            if (strcmp(list[i].name, winner) < 0) {
+                strcpy(winner, list[i].name);
+            }
+        }
+    }
+
+    printf("[\"%s\", \"%d\"]\n", winner, maxVotes);
+
+    return 0;
+}
