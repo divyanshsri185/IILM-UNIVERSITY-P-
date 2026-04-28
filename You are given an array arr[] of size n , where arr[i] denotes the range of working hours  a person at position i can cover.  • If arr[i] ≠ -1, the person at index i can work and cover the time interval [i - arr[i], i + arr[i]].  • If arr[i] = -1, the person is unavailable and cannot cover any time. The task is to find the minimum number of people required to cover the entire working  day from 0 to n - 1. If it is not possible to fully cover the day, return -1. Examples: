@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int start, end;
+} Interval;
+
+int compare(const void *a, const void *b) {
+    return ((Interval*)a)->start - ((Interval*)b)->start;
+}
+
+int minPeople(int arr[], int n) {
+    Interval intervals[1000];
+    int k = 0;
+
+    // Step 1: Build intervals
+    for (int i = 0; i < n; i++) {
+        if (arr[i] != -1) {
+            intervals[k].start = (i - arr[i] < 0) ? 0 : i - arr[i];
+            intervals[k].end = (i + arr[i] >= n) ? n - 1 : i + arr[i];
+            k++;
+        }
+    }
+
+    // Step 2: Sort
+    qsort(intervals, k, sizeof(Interval), compare);
+
+    int i = 0, count = 0, currEnd = 0;
+
+    while (currEnd < n) {
+        int maxEnd = currEnd;
+
+        while (i < k && intervals[i].start <= currEnd) {
+            if (intervals[i].end > maxEnd)
+                maxEnd = intervals[i].end;
+            i++;
+        }
+
+        if (maxEnd == currEnd)
+            return -1;
+
+        count++;
+        currEnd = maxEnd + 1;
+    }
+
+    return count;
+}
+
+int main() {
+    int arr[] = {1, 2, 1, 0};
+    int n = 4;
+
+    printf("%d\n", minPeople(arr, n)); // Output: 1
+
+    return 0;
+}
