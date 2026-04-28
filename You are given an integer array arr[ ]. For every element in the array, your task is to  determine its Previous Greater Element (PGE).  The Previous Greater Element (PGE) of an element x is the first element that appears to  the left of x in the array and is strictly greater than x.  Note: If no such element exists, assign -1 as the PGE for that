@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+void findPGE(int arr[], int n) {
+    int stack[1000];
+    int top = -1;
+    int result[1000];
+
+    for (int i = 0; i < n; i++) {
+
+        // Remove elements smaller or equal to current
+        while (top >= 0 && stack[top] <= arr[i]) {
+            top--;
+        }
+
+        // If stack empty → no greater element
+        if (top == -1)
+            result[i] = -1;
+        else
+            result[i] = stack[top];
+
+        // Push current element
+        stack[++top] = arr[i];
+    }
+
+    // Print result
+    for (int i = 0; i < n; i++) {
+        printf("%d ", result[i]);
+    }
+}
+
+int main() {
+    int arr[] = {10, 4, 2, 20, 40, 12, 30};
+    int n = 7;
+
+    findPGE(arr, n);  // Output: -1 10 4 -1 -1 40 40
+
+    return 0;
+}
