@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 1000
+
+// Max Heap
+double heap[MAX];
+int size = 0;
+
+// Insert into heap
+void push(double val) {
+    heap[size] = val;
+    int i = size;
+    size++;
+
+    while (i > 0 && heap[(i - 1) / 2] < heap[i]) {
+        double temp = heap[i];
+        heap[i] = heap[(i - 1) / 2];
+        heap[(i - 1) / 2] = temp;
+        i = (i - 1) / 2;
+    }
+}
+
+// Remove max
+double pop() {
+    double top = heap[0];
+    heap[0] = heap[size - 1];
+    size--;
+
+    int i = 0;
+    while (2 * i + 1 < size) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+
+        if (left < size && heap[left] > heap[largest])
+            largest = left;
+        if (right < size && heap[right] > heap[largest])
+            largest = right;
+
+        if (largest == i) break;
+
+        double temp = heap[i];
+        heap[i] = heap[largest];
+        heap[largest] = temp;
+
+        i = largest;
+    }
+    return top;
+}
+
+int main() {
+    int arr[] = {8, 6, 2};
+    int n = 3;
+
+    double sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
+        push(arr[i]);
+    }
+
+    double target = sum / 2;
+    int operations = 0;
+
+    while (sum > target) {
+        double max = pop();
+        double half = max / 2.0;
+
+        sum -= (max - half); // reduction
+        push(half);
+
+        operations++;
+    }
+
+    printf("%d\n", operations);
+    return 0;
+}
