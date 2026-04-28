@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <string.h>
+#include <limits.h>
+
+int shortestSubstring(char s1[], char s2[]) {
+    int need[26] = {0};
+    int have[26] = {0};
+
+    int required = 0;
+
+    // Mark required vowels
+    for (int i = 0; i < strlen(s1); i++) {
+        if (need[s1[i] - 'a'] == 0) {
+            need[s1[i] - 'a'] = 1;
+            required++;
+        }
+    }
+
+    int formed = 0;
+    int left = 0;
+    int minLen = INT_MAX;
+
+    for (int right = 0; right < strlen(s2); right++) {
+        char c = s2[right];
+
+        if (need[c - 'a']) {
+            have[c - 'a']++;
+            if (have[c - 'a'] == 1)
+                formed++;
+        }
+
+        // Shrink window
+        while (formed == required) {
+            int len = right - left + 1;
+            if (len < minLen)
+                minLen = len;
+
+            char leftChar = s2[left];
+
+            if (need[leftChar - 'a']) {
+                have[leftChar - 'a']--;
+                if (have[leftChar - 'a'] == 0)
+                    formed--;
+            }
+
+            left++;
+        }
+    }
+
+    return (minLen == INT_MAX) ? -1 : minLen;
+}
+
+int main() {
+    char s1[] = "ae";
+    char s2[] = "acbaudeq";
+
+    printf("%d\n", shortestSubstring(s1, s2)); // Output: 4
+
+    return 0;
+}
