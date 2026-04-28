@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <string.h>
+
+int isVowel(char c) {
+    return (c=='a'||c=='e'||c=='i'||c=='o'||c=='u');
+}
+
+int countBalanced(char arr[][100], int n) {
+    int val[1000];
+
+    // Step 1: Convert each string
+    for (int i = 0; i < n; i++) {
+        int v = 0, c = 0;
+
+        for (int j = 0; j < strlen(arr[i]); j++) {
+            if (isVowel(arr[i][j]))
+                v++;
+            else
+                c++;
+        }
+
+        val[i] = v - c;
+    }
+
+    // Step 2: Count subarrays with sum = 0
+    int prefix = 0;
+    int count = 0;
+
+    int map[2001] = {0}; // offset for negative
+    int offset = 1000;
+
+    map[offset] = 1; // prefix sum 0
+
+    for (int i = 0; i < n; i++) {
+        prefix += val[i];
+
+        count += map[prefix + offset];
+        map[prefix + offset]++;
+    }
+
+    return count;
+}
+
+int main() {
+    char arr[][100] = {"aeio", "aa", "bc", "ot", "cdbd"};
+    int n = 5;
+
+    printf("%d\n", countBalanced(arr, n)); // Output: 4
+
+    return 0;
+}
