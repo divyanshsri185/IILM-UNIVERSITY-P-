@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+int main() {
+    int n = 3, m = 3, q = 2;
+
+    int a[3][3] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
+    int query[2][4] = {
+        {0, 0, 2, 2},
+        {1, 0, 2, 1}
+    };
+
+    int pref[3][3];
+
+    // Step 1: Build Prefix Sum Matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            pref[i][j] = a[i][j];
+
+            if (i > 0)
+                pref[i][j] += pref[i - 1][j];
+            if (j > 0)
+                pref[i][j] += pref[i][j - 1];
+            if (i > 0 && j > 0)
+                pref[i][j] -= pref[i - 1][j - 1];
+        }
+    }
+
+    // Step 2: Process Queries
+    for (int i = 0; i < q; i++) {
+        int r1 = query[i][0];
+        int c1 = query[i][1];
+        int r2 = query[i][2];
+        int c2 = query[i][3];
+
+        int sum = pref[r2][c2];
+
+        if (r1 > 0)
+            sum -= pref[r1 - 1][c2];
+        if (c1 > 0)
+            sum -= pref[r2][c1 - 1];
+        if (r1 > 0 && c1 > 0)
+            sum += pref[r1 - 1][c1 - 1];
+
+        printf("%d\n", sum);
+    }
+
+    return 0;
+}
